@@ -6,18 +6,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Rapide : typecheck + build + tests unitaires et fonctionnels, à chaque push/PR.
+  # Rapide : build global + tests IMPACTÉS par le diff, à chaque push/PR.
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # nécessaire pour differ le code changé
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
       - run: npm ci
       - run: npm run build
-      - run: npm test
+      - name: Tests impactés par le diff
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "Base git indisponible (nouvelle branche ?) → suite complète."
+            npx vitest run
+          else
+            echo "Tests impactés depuis $BASE"
+            npx vitest run --changed "$BASE"
+          fi
 
   # Lent/coûteux : E2E Obsidian réel (télécharge Obsidian, headless via xvfb).
   # Seulement sur main ou déclenchement manuel — pas sur chaque push (cf. PLAN.md).

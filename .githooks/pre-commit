@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Pre-commit : typecheck global (tsc) + tests IMPACTÉS par les fichiers stagés.
+# Activé via core.hooksPath=.githooks (configuré par le script npm `prepare`).
+# Contournable ponctuellement avec `git commit --no-verify`.
+set -euo pipefail
+
+staged="$(git diff --cached --name-only --diff-filter=ACMR)"
+
+# Fichiers de code TypeScript concernés (source + tests unit/fonctionnels).
+ts_files="$(echo "$staged" | grep -E '^(src|test)/.*\.ts$' || true)"
+
+# Fichiers « transverses » : un changement ici peut impacter toute la suite.
+transverse="$(echo "$staged" | grep -E '^(package(-lock)?\.json|tsconfig.*\.json|vitest\.config\.ts|esbuild\.config\.mjs)$' || true)"
+
+if [ -z "$ts_files" ] && [ -z "$transverse" ]; then
+  echo "pre-commit : aucun code TS ni config stagé → rien à tester."
+  exit 0
+fi
+
+echo "pre-commit : typecheck (tsc -noEmit)…"
+npx tsc -noEmit -skipLibCheck
+
+if [ -n "$transverse" ]; then
+  echo "pre-commit : fichier transverse modifié → suite complète."
+  npx vitest run
+else
+  echo "pre-commit : tests impactés par :"
+  echo "$ts_files" | sed 's/^/  - /'
+  # shellcheck disable=SC2086
+  npx vitest related --run $ts_files
+fi
