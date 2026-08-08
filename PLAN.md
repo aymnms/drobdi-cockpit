@@ -31,29 +31,25 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-*(rien — J0 terminé, J1 à démarrer)*
+### J1 — Domaine (fonctions pures) — TDD strict
+
+- [ ] **J1-1** — `semaineISO(date)` → `YYYY-Wxx` (ISO 8601, cas limites année/53 semaines)
+- [ ] **J1-2** — `sprintCourant(maintenant)` → wrapper métier
+- [ ] **J1-3** — Type `Tache` (schéma v2)
+- [ ] **J1-4** — `parseFrontmatter(raw)`
+- [ ] **J1-5** — `serializeFrontmatter(tache)` (round-trip)
+- [ ] **J1-6** — `validerSchema(tache)` (R1/R2/R4)
+- [ ] **J1-7** — `prochainNumeroTD(existants)`
+- [ ] **J1-8** — `avancerStatut(tache, statut, aujourdHui)`
+- [ ] **J1-9** — `trierVersSprint(tache, sprint)`
+- [ ] **J1-10** — `trierVersBacklog(tache)`
+- [ ] **J1-11** — `planifierCreneau(tache, debut, fin?)`
+- [ ] **J1-12** — `creerTache(titre, projet, existants)`
+- [ ] **J1-13** — Revue couverture `src/domain/` (viser 100%)
 
 ---
 
 ## ⬜ À faire
-
-### J1 — Domaine (fonctions pures, `src/domain/`, tests dans `test/unit/`)
-
-> Chaque tâche = cycle TDD strict : écrire le test (rouge, vérifier qu'il échoue pour la bonne raison) → écrire le code minimal → test vert → refactor si besoin → commit.
-
-- [ ] **J1-1** — `semaineISO(date: Date): string` → retourne `YYYY-Wxx` (semaine ISO 8601). Cas limites : chevauchement d'année (ex. 31 déc peut être en W01 de l'année suivante), années à 53 semaines.
-- [ ] **J1-2** — `sprintCourant(maintenant: Date): string` → wrapper sur J1-1, nom explicite métier.
-- [ ] **J1-3** — Type `Tache` (TypeScript) représentant le frontmatter canonique exact du schéma v2 (`SYSTEME.md` §3 / `SPEC-scrum-personnel.md` §5.3) : `Titre, Projet, Statut, Priorité, Sprint, Début?, Fin?, Réalisé le?, Récurrente?, Reprend?, Google Calendar?, Google Event ID?`.
-- [ ] **J1-4** — `parseFrontmatter(raw: string): Tache` → parse une chaîne YAML frontmatter + corps en objet `Tache`. Cas testés : fichier valide minimal, fichier avec tous les champs optionnels, absence de frontmatter (erreur), corps sans `# Titre` (erreur R3).
-- [ ] **J1-5** — `serializeFrontmatter(tache: Tache): string` → sérialise dans l'ordre canonique exact, LF uniquement, wikilinks quotés `"[[...]]"`. Round-trip testé : `parseFrontmatter(serializeFrontmatter(t)) === t`.
-- [ ] **J1-6** — `validerSchema(tache: Tache): ErreurValidation[]` → applique R1 (champs interdits), R2 (`Fin` sans `Début`), R4 (format `TD-XXXX`). Retourne liste d'erreurs vide si valide.
-- [ ] **J1-7** — `prochainNumeroTD(numerosExistants: string[]): string` → règle R4, jamais réutilisé, jamais sauté, padding 4 chiffres.
-- [ ] **J1-8** — `avancerStatut(tache: Tache, nouveauStatut: Statut, aujourdHui: Date): Tache` → transition simple ; si `nouveauStatut === 'Terminé'`, ajoute `Réalisé le: aujourdHui`. Ne touche à rien d'autre.
-- [ ] **J1-9** — `trierVersSprint(tache: Tache, sprint: string): Tache` → transition atomique Backlog → sprint : pose `Sprint` + `Statut: 'À faire'` ensemble.
-- [ ] **J1-10** — `trierVersBacklog(tache: Tache): Tache` → transition atomique inverse : vide `Sprint` + pose `Statut: 'Backlog'`.
-- [ ] **J1-11** — `planifierCreneau(tache: Tache, debut: string, fin?: string): Tache` → écrit `Début` (et `Fin` si fourni). Valide R2 (rejette `Fin` sans `Début`).
-- [ ] **J1-12** — `creerTache(titre: string, projet: string, numerosExistants: string[]): Tache` → nouvelle tâche en `Backlog`, frontmatter canonique complet, numéro via J1-7.
-- [ ] **J1-13** — Revue de couverture du dossier `src/domain/` : viser 100% sur ces fonctions (ce sont les garde-fous du schéma).
 
 ### J2 — Adaptateur Obsidian (`src/obsidian/`, tests fonctionnels dans `test/functional/` sur vrai FS temporaire)
 
