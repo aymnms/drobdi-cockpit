@@ -11,6 +11,12 @@ coverage/
 # Obsidian
 .obsidian-cache/
 
+# Vault E2E généré à l'exécution (le dossier est conservé via .gitkeep)
+e2e/vault/taches/
+e2e/vault/sprints/
+e2e/vault/projets/
+e2e/vault/.obsidian/
+
 # OS
 .DS_Store
 

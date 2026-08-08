@@ -31,19 +31,11 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-*(rien — J6 terminé, J7 (E2E) à démarrer)*
+*(rien — ✅ tous les jalons J0→J7 sont terminés.)*
 
 ---
 
 ## ⬜ À faire
-
-### J7 — E2E (post-MVP)
-
-- [ ] **J7-1** — Setup `wdio-obsidian-service` (à partir du template sample plugin), vault de test dédié.
-- [ ] **J7-2** — Smoke test : ouverture du cockpit, sprint courant détecté visible à l'écran.
-- [ ] **J7-3** — Smoke test : geste "avancer une tâche" (drag basique) modifie bien le fichier.
-- [ ] **J7-4** — Smoke test : geste "capturer" crée bien un nouveau fichier `TD-XXXX.md` valide.
-- [ ] **J7-5** — Intégration CI GitHub Actions (unit + functional à chaque push, e2e en job séparé/manuel).
 
 ---
 
@@ -108,6 +100,15 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - [x] **J6-3** — `scripts/install.sh` (copie sûre des artefacts, refuse un non-vault) + `docs/installation-vault-reel.md` (précautions prod, jamais toucher aux données).
 - [x] **J6-4** — `docs/guide-utilisateur.md` (lecture du cockpit + 4 gestes) ; README enrichi (liens docs). 99 tests verts, build vert.
 
+### J7 — E2E (post-MVP)
+
+- [x] **J7-1** — `wdio-obsidian-service` configuré (`e2e/wdio.conf.mts`), vault E2E dédié (`e2e/vault/`, fixtures générées pour la semaine courante en `onPrepare`). Script `test:e2e`.
+- [x] **J7-2** — Smoke : ouverture du cockpit + sprint courant affiché. **Vert dans Obsidian 1.13.4 réel.**
+- [x] **J7-3** — Smoke : geste « avancer » (drag) → fichier passé à `En cours`, corps préservé. **Vert.**
+- [x] **J7-4** — Smoke : geste « capturer » → nouveau `TD-XXXX.md` en Backlog. **Vert.**
+- [x] **J7-5** — CI GitHub Actions (`.github/workflows/ci.yml`) : job `test` (build+unit+functional) à chaque push/PR, job `e2e` (xvfb, Obsidian headless) sur `main`/manuel.
+- Bilan E2E : les 3 smoke tests passent localement dans une vraie instance Obsidian (téléchargée par le service). Corrigé un bug de spec (les closures ne traversent pas `executeObsidian` → passage par arguments).
+
 ---
 
 ## Journal
@@ -120,6 +121,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - **2026-08-08** — **J4 terminé.** Cockpit lecture seule : métriques pures (taux/burndown) + rendu DOM (bandeau jauge+SVG, kanban 5 colonnes, cartes équilibrées, backlog repliable) testé sous jsdom (Obsidian-agnostique). `CockpitView` branchée + rafraîchissement réactif debouncé + ouverture au clic. CSS thème Obsidian. 90 tests verts, build vert. Reste J5 = les 4 gestes (MVP).
 - **2026-08-08** — **🎉 J5 terminé — MVP ATTEINT.** Les 4 gestes câblés : Avancer (drag colonnes), Trier backlog↔sprint (drag croisé), Capturer (commande+modale→nouveau fichier), Planifier (menu jour). Transitions pures + écritures atomiques/minimales, corps et ordre canonique préservés. Tests : jsdom (logique des gestes) + fonctionnels (fichiers). README + version 1.0.0 + `versions.json` + tag `v1.0.0-mvp`. **98 tests verts, domaine 100 % lignes/fonctions, build vert.** J6 (polish) et J7 (E2E) restent planifiés, post-MVP.
 - **2026-08-08** — **J6 terminé (polish).** Couleurs projet déterministes (angle d'or) + accent carte, pastilles priorité accessibles, script + doc d'installation en prod (avec précautions), guide utilisateur. 99 tests verts, build vert. Reste J7 (E2E + CI).
+- **2026-08-08** — **J7 terminé — PROJET COMPLET (J0→J7).** Harnais E2E `wdio-obsidian-service` : 3 smoke tests (ouverture+sprint, avancer, capturer) **verts dans une vraie instance Obsidian 1.13.4**. CI GitHub Actions (job rapide unit/functional/build + job e2e headless séparé). Bilan global : **99 tests unit/fonctionnels + 3 E2E**, domaine 100 % lignes/fonctions, build vert.
 
 ---
 
