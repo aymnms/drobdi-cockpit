@@ -31,18 +31,11 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-*(rien — J2 terminé, J3 à démarrer)*
+*(rien — J3 terminé, J4 à démarrer)*
 
 ---
 
 ## ⬜ À faire
-
-### J3 — v0 : squelette plugin
-
-- [ ] **J3-1** — `ItemView` Obsidian minimale enregistrée (`src/obsidian/CockpitView.ts`), ouvrable en onglet. Pas de logique de rendu encore, juste "Cockpit" affiché.
-- [ ] **J3-2** — Commande + ruban (ribbon icon) pour ouvrir la vue.
-- [ ] **J3-3** — Au chargement de la vue : appelle `detecterSprintCourant` (J2-4) + `listerTaches` (J2-3) filtrées sur le sprint courant, log en console (`console.table` ou équivalent).
-- [ ] **J3-4** — Test manuel documenté (procédure dans `docs/test-manuel-v0.md`) : installer dans un vault bac à sable avec fixtures, vérifier la détection.
 
 ### J4 — v0.5 : cockpit lecture seule
 
@@ -107,6 +100,14 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - [x] **J2-6** — Non-régression : `lireTache` → `ecrireTache` d'une tâche canonique ⇒ fichier identique octet pour octet.
 - Note archi : adaptateur `node:fs` (pas de mock Obsidian) réutilisant parse/serialize ; mêmes garanties que `processFrontMatter`. Câblage runtime Obsidian en J3+. 14 tests fonctionnels+unit ajoutés (64 au total).
 
+### J3 — v0 : squelette plugin
+
+- [x] **J3-1** — `CockpitView` (`ItemView`) enregistrée, ouvrable en onglet, en-tête « Cockpit ».
+- [x] **J3-2** — Ruban (icône `layout-dashboard`) + commande « Ouvrir le cockpit » (`activerVue` révèle/ouvre l'onglet).
+- [x] **J3-3** — `VaultDrobdi.charger()` (résolution base via `FileSystemAdapter`) → `detecterSprintCourant` + `listerTaches` + `construireCockpit` (fonction pure filtrage/colonnes, testée) ; résumé à l'écran + `console.table` des tâches du sprint.
+- [x] **J3-4** — `docs/test-manuel-v0.md` + fixtures `fixtures/vault-bac-a-sable/` (taches/sprints/projets, sprint 2026-W32).
+- Correctif build : esbuild `platform: "node"` pour externaliser les imports `node:` (fs/promises, path). 68 tests verts, build vert.
+
 ---
 
 ## Journal
@@ -115,6 +116,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - **2026-08-08** — **J0 terminé.** Node.js absent de la machine → installé via Homebrew (node 26.7.0, npm 11.19.0) ; postinstall esbuild approuvé (npm 11). Arborescence `src/{domain,obsidian}` + `test/{unit,functional}` créée, `main.ts` → `src/main.ts`. `.gitignore` créé (le prompt le supposait présent). Build vert, tests verts (0 test). Prêt pour J1.
 - **2026-08-08** — **J1 terminé.** Noyau domaine complet en TDD strict (rouge→vert→commit à chaque groupe) : semaine ISO, type `Tache` + parse/serialize (ordre canonique, round-trip), validation R1/R2/R4, numérotation TD, 5 transitions pures, création. `@vitest/coverage-v8` ajouté. 50 tests verts, 100 % lignes/fonctions sur `src/domain/`. Prêt pour J2 (adaptateur Obsidian, tests fonctionnels sur vrai FS).
 - **2026-08-08** — **J2 terminé.** Adaptateur `src/obsidian/vaultFs.ts` (node:fs, sans mock Obsidian) : lire/écrire/lister/detecter + `ecrireAtomique` (temp+rename). Corps & ordre canonique préservés au caractère près, round-trip fichier octet-pour-octet, atomicité vérifiée. Correction d'un cast TS (build `tsc` échouait alors que vitest passait — vitest ne typecheck pas). 64 tests verts, build vert.
+- **2026-08-08** — **J3 terminé.** Squelette plugin : `CockpitView` (ItemView) + ruban + commande, câblés à `VaultDrobdi` (runtime Obsidian → vaultFs). Fonction pure `construireCockpit` (filtrage sprint/backlog/colonnes) testée. Fixtures bac-à-sable + doc test manuel v0. esbuild `platform:"node"` pour les builtins `node:`. 68 tests verts, build vert. Vérif E2E réelle dans Obsidian = J7.
 
 ---
 

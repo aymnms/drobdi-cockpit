@@ -27,6 +27,10 @@ const context = await esbuild.context({
     ...builtins,
   ],
   format: "cjs",
+  // Obsidian desktop = Electron/Node : externalise automatiquement les builtins
+  // Node, y compris les imports préfixés `node:` (fs/promises, path) utilisés par
+  // l'adaptateur vault. Choix desktop-first assumé (cf. PLAN.md, revisitable J6).
+  platform: "node",
   target: "es2020",
   logLevel: "info",
   sourcemap: production ? false : "inline",
