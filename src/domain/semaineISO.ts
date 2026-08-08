@@ -46,3 +46,16 @@ export function semaineISO(date: Date): string {
 export function sprintCourant(maintenant: Date): string {
   return semaineISO(maintenant);
 }
+
+/**
+ * Bornes de la semaine ISO contenant `date` : lundi (début) et dimanche (fin),
+ * à minuit heure locale. Utilisé pour reconstruire le burndown (7 jours).
+ */
+export function bornesSemaineISO(date: Date): { debut: Date; fin: Date } {
+  const debut = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const jour = (debut.getDay() + 6) % 7; // lundi = 0
+  debut.setDate(debut.getDate() - jour);
+  const fin = new Date(debut);
+  fin.setDate(debut.getDate() + 6);
+  return { debut, fin };
+}

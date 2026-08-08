@@ -31,20 +31,18 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-*(rien — J3 terminé, J4 à démarrer)*
+### J4 — v0.5 : cockpit lecture seule
+
+- [ ] **J4-1** — `tauxRealisation` (pur, TDD)
+- [ ] **J4-2** — `pointsBurndown` (pur, TDD) + `bornesSemaineISO`
+- [ ] **J4-3** — Rendu bandeau métriques (jauge % + burndown SVG)
+- [ ] **J4-4** — Rendu kanban (colonnes statuts, cartes équilibrées)
+- [ ] **J4-5** — Rendu panneau backlog repliable
+- [ ] **J4-6** — Rafraîchissement réactif (`vault.on('modify')`)
 
 ---
 
 ## ⬜ À faire
-
-### J4 — v0.5 : cockpit lecture seule
-
-- [ ] **J4-1** — Fonction pure `tauxRealisation(taches: Tache[]): number` (Terminé / engagées) — testée en unitaire (J1-continuation).
-- [ ] **J4-2** — Fonction pure `pointsBurndown(taches: Tache[], semaine: {debut: Date, fin: Date}): {jour: Date, restantes: number}[]` — testée en unitaire.
-- [ ] **J4-3** — Rendu DOM du bandeau métriques (jauge % + courbe burndown SVG ou canvas simple).
-- [ ] **J4-4** — Rendu DOM du kanban (colonnes = statuts v2), cartes équilibrées (titre, badge projet, pastille priorité, badge jour).
-- [ ] **J4-5** — Rendu DOM du panneau backlog latéral repliable, trié par priorité.
-- [ ] **J4-6** — Rafraîchissement réactif : la vue se met à jour quand un fichier `taches/*.md` change (écoute `app.vault.on('modify')`).
 
 ### J5 — v1 : les 4 gestes (MVP)
 

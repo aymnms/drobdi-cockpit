@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { semaineISO, sprintCourant } from "../../src/domain/semaineISO";
+import { bornesSemaineISO, semaineISO, sprintCourant } from "../../src/domain/semaineISO";
 
 describe("semaineISO (ISO 8601)", () => {
   it("formate en YYYY-Wxx avec padding sur 2 chiffres", () => {
@@ -40,5 +40,20 @@ describe("semaineISO (ISO 8601)", () => {
 describe("sprintCourant", () => {
   it("retourne la semaine ISO du moment donné (wrapper métier)", () => {
     expect(sprintCourant(new Date(2026, 7, 8))).toBe("2026-W32");
+  });
+});
+
+describe("bornesSemaineISO", () => {
+  it("retourne le lundi et le dimanche de la semaine (2026-W32)", () => {
+    const { debut, fin } = bornesSemaineISO(new Date(2026, 7, 8)); // samedi
+    expect([debut.getFullYear(), debut.getMonth(), debut.getDate()]).toEqual([2026, 7, 3]); // lundi 3 août
+    expect([fin.getFullYear(), fin.getMonth(), fin.getDate()]).toEqual([2026, 7, 9]); // dimanche 9 août
+    expect(debut.getDay()).toBe(1); // lundi
+    expect(fin.getDay()).toBe(0); // dimanche
+  });
+
+  it("gère un dimanche (reste dans la même semaine ISO)", () => {
+    const { debut } = bornesSemaineISO(new Date(2026, 7, 9)); // dimanche 9 août
+    expect(debut.getDate()).toBe(3); // même lundi 3 août
   });
 });
