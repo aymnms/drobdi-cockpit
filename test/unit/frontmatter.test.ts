@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Tache } from "../../src/domain/tache";
 import {
+  lireChampsBruts,
   parseFrontmatter,
   serializeFrontmatter,
 } from "../../src/domain/frontmatter";
@@ -147,6 +148,32 @@ describe("serializeFrontmatter", () => {
   it("n'émet jamais de CRLF", () => {
     const t = parseFrontmatter(FICHIER_COMPLET);
     expect(serializeFrontmatter(t)).not.toContain("\r");
+  });
+});
+
+describe("lireChampsBruts (frontmatter hors schéma-tâche)", () => {
+  it("lit les paires clé/valeur d'une fiche sprint", () => {
+    const fiche = `---
+Sprint: 2026-W32
+Semaine: du 3 au 9 août
+Statut: En cours
+---
+
+# Sprint
+`;
+    expect(lireChampsBruts(fiche)).toEqual({
+      Sprint: "2026-W32",
+      Semaine: "du 3 au 9 août",
+      Statut: "En cours",
+    });
+  });
+
+  it("retourne {} sans frontmatter", () => {
+    expect(lireChampsBruts("# Rien\n")).toEqual({});
+  });
+
+  it("tolère un frontmatter sans corps", () => {
+    expect(lireChampsBruts("---\nSprint: 2026-W32\n---\n")).toEqual({ Sprint: "2026-W32" });
   });
 });
 

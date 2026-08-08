@@ -31,22 +31,11 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-*(rien — J1 terminé, J2 à démarrer)*
+*(rien — J2 terminé, J3 à démarrer)*
 
 ---
 
 ## ⬜ À faire
-
-### J2 — Adaptateur Obsidian (`src/obsidian/`, tests fonctionnels dans `test/functional/` sur vrai FS temporaire)
-
-> Pas de mock de l'API Obsidian ici : tests sur de vrais fichiers `.md` dans un dossier temporaire (`fs.mkdtemp`), pour garantir l'atomicité et la préservation de l'ordre/corps (garde-fou §6 du prompt).
-
-- [ ] **J2-1** — `lireTache(cheminFichier: string): Promise<Tache>` → lit un vrai fichier `.md`, utilise `parseFrontmatter` (J1-4).
-- [ ] **J2-2** — `ecrireTache(cheminFichier: string, tache: Tache): Promise<void>` → réécrit uniquement les champs concernés, **préserve le corps de note existant au-delà du `# Titre`**, préserve l'ordre canonique. Test : écrire un champ, vérifier que le reste du fichier (notes libres) est identique au caractère près.
-- [ ] **J2-3** — `listerTaches(dossierTaches: string): Promise<Tache[]>` → scanne `taches/*.md`, retourne toutes les tâches parsées.
-- [ ] **J2-4** — `detecterSprintCourant(dossierSprints: string, maintenant: Date): Promise<Sprint | null>` → trouve le fichier `Sprint-YYYY-Wxx.md` correspondant à la semaine ISO courante.
-- [ ] **J2-5** — Test d'atomicité : écriture interrompue (simulation) ne doit jamais laisser un fichier à moitié écrit — écrire dans un fichier temporaire puis renommer (`rename` atomique du FS).
-- [ ] **J2-6** — Test de non-régression : lire un vrai fichier TD existant du vault (fixture copiée depuis `taches/template-tache.md` du projet), le réécrire sans modification logique, diff doit être vide.
 
 ### J3 — v0 : squelette plugin
 
@@ -108,6 +97,16 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - [x] **J1-8..J1-12** — `avancerStatut`, `trierVersSprint`, `trierVersBacklog`, `planifierCreneau`, `creerTache`. Transitions pures immuables, écriture minimale. 13 tests.
 - [x] **J1-13** — Couverture `src/domain/` : **100 % statements/functions/lines** (branches 93,6 %, reste = garde-fous défensifs `?? ""` inatteignables). 50 tests au total.
 
+### J2 — Adaptateur Obsidian (`src/obsidian/vaultFs.ts`, tests fonctionnels sur vrai FS)
+
+- [x] **J2-1** — `lireTache(chemin)` (node:fs + `parseFrontmatter`).
+- [x] **J2-2** — `ecrireTache(chemin, tache)` : corps préservé au caractère près + ordre canonique vérifiés par test.
+- [x] **J2-3** — `listerTaches(dossier)` : ne retient que `TD-XXXX.md` (template/autres ignorés).
+- [x] **J2-4** — `detecterSprintCourant(dossier, maintenant)` → `FichierSprint | null` (via `lireChampsBruts`).
+- [x] **J2-5** — `ecrireAtomique` (temp + `rename`) : aucun résidu `.tmp`, cible jamais partielle.
+- [x] **J2-6** — Non-régression : `lireTache` → `ecrireTache` d'une tâche canonique ⇒ fichier identique octet pour octet.
+- Note archi : adaptateur `node:fs` (pas de mock Obsidian) réutilisant parse/serialize ; mêmes garanties que `processFrontMatter`. Câblage runtime Obsidian en J3+. 14 tests fonctionnels+unit ajoutés (64 au total).
+
 ---
 
 ## Journal
@@ -115,6 +114,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - **AAAA-MM-JJ** — Création du plan initial (ce fichier), 7 jalons, ~45 tâches. Setup repo local fait hors Claude Code (squelette package.json/tsconfig/esbuild/vitest déjà présent), reste à valider dans l'environnement réel.
 - **2026-08-08** — **J0 terminé.** Node.js absent de la machine → installé via Homebrew (node 26.7.0, npm 11.19.0) ; postinstall esbuild approuvé (npm 11). Arborescence `src/{domain,obsidian}` + `test/{unit,functional}` créée, `main.ts` → `src/main.ts`. `.gitignore` créé (le prompt le supposait présent). Build vert, tests verts (0 test). Prêt pour J1.
 - **2026-08-08** — **J1 terminé.** Noyau domaine complet en TDD strict (rouge→vert→commit à chaque groupe) : semaine ISO, type `Tache` + parse/serialize (ordre canonique, round-trip), validation R1/R2/R4, numérotation TD, 5 transitions pures, création. `@vitest/coverage-v8` ajouté. 50 tests verts, 100 % lignes/fonctions sur `src/domain/`. Prêt pour J2 (adaptateur Obsidian, tests fonctionnels sur vrai FS).
+- **2026-08-08** — **J2 terminé.** Adaptateur `src/obsidian/vaultFs.ts` (node:fs, sans mock Obsidian) : lire/écrire/lister/detecter + `ecrireAtomique` (temp+rename). Corps & ordre canonique préservés au caractère près, round-trip fichier octet-pour-octet, atomicité vérifiée. Correction d'un cast TS (build `tsc` échouait alors que vitest passait — vitest ne typecheck pas). 64 tests verts, build vert.
 
 ---
 

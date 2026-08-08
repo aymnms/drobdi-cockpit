@@ -42,6 +42,7 @@ const CHAMPS: readonly SpecChamp[] = [
 ];
 
 const RE_FRONTMATTER = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+const RE_FRONTMATTER_SOUPLE = /^---\n([\s\S]*?)\n---\s*(?:\n[\s\S]*)?$/;
 
 function deWikilink(valeur: string): string {
   return valeur
@@ -114,6 +115,25 @@ export function parseFrontmatter(raw: string): Tache {
 }
 
 /**
+ * Lecture générique des paires `Clé: valeur` d'un frontmatter, SANS schéma ni
+ * contrainte de corps. Utilisé pour les fichiers hors schéma-tâche (ex. fiches
+ * sprint : `Sprint`/`Semaine`/`Statut`). Retourne `{}` si aucun frontmatter.
+ */
+export function lireChampsBruts(raw: string): Record<string, string> {
+  const normalise = raw.replace(/\r\n/g, "\n");
+  const m = RE_FRONTMATTER_SOUPLE.exec(normalise);
+  if (!m) return {};
+  const out: Record<string, string> = {};
+  for (const ligne of m[1].split("\n")) {
+    if (ligne.trim() === "") continue;
+    const idx = ligne.indexOf(":");
+    if (idx === -1) continue;
+    out[ligne.slice(0, idx).trim()] = ligne.slice(idx + 1).trim();
+  }
+  return out;
+}
+
+/**
  * Sérialise une `Tache` en fichier markdown complet (frontmatter + corps), dans
  * l'ordre canonique exact, en LF, wikilinks quotés. N'émet QUE les champs du
  * schéma (garantit R1 à l'écriture) et omet les optionnels absents/vides ainsi
@@ -122,8 +142,9 @@ export function parseFrontmatter(raw: string): Tache {
 export function serializeFrontmatter(tache: Tache): string {
   const lignes: string[] = [];
 
+  const champs = tache as unknown as Record<string, unknown>;
   for (const spec of CHAMPS) {
-    const valeur = (tache as Record<string, unknown>)[spec.key];
+    const valeur = champs[spec.key];
 
     // `Sprint` est requis mais légitimement vide pour un Backlog → `Sprint:` sans espace.
     if (spec.key === "sprint") {
