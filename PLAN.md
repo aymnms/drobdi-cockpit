@@ -31,14 +31,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-### J5 — v1 : les 4 gestes (MVP)
-
-- [ ] **J5-1** — Geste « Avancer » (drag entre colonnes) → `avancerStatut` → `ecrireTache`
-- [ ] **J5-2** — Geste « Trier backlog ↔ sprint » (drag) → `trierVersSprint`/`trierVersBacklog`
-- [ ] **J5-3** — Geste « Capturer » (commande + modal) → `creerTache` → nouveau fichier
-- [ ] **J5-4** — Geste « Planifier » (clic badge jour → menu lun-dim) → `planifierCreneau`
-- [ ] **J5-5** — Test manuel de bout en bout des 4 gestes
-- [ ] **J5-6** — Jalon MVP : revue, README, tag `v1.0.0-mvp`
+*(rien — 🎉 MVP atteint, fin de J5. J6/J7 post-MVP en attente de feu vert.)*
 
 ---
 
@@ -106,6 +99,15 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - [x] **J4-6** — `CockpitView` rendue via `rendreCockpit`, rafraîchissement réactif (`vault.on('modify'/create/delete/rename')` filtré sur taches/sprints, debounce 200 ms). Ouverture de note au clic.
 - Archi : rendu DOM standard (`src/ui/`) testable jsdom + fonctionnant dans Obsidian ; `TacheVault = Tache & {id, chemin}` ; `construireCockpit` rendu générique ; helpers de format purs ; `styles.css` (variables de thème Obsidian). +`jsdom`, +`DOM.Iterable`. 90 tests verts.
 
+### J5 — v1 : les 4 gestes (MVP) ✅
+
+- [x] **J5-1** — Geste « Avancer » : drag HTML5 entre colonnes → `avancerStatut` → écriture atomique. Testé jsdom (drop) + fonctionnel (fichier).
+- [x] **J5-2** — Geste « Trier backlog ↔ sprint » : drag croisé (contexte DnD partagé) → `trierVersSprint`/`trierVersBacklog`, atomicité vérifiée au niveau fichier.
+- [x] **J5-3** — Geste « Capturer » : commande + `CapturerModal` (Entrée) → `creerTache` → nouveau `taches/TD-XXXX.md`. Flux testé fonctionnellement.
+- [x] **J5-4** — Geste « Planifier » : clic badge jour → `Menu` des 7 jours de la semaine (+ retrait) → `planifierCreneau`. Clic testé jsdom.
+- [x] **J5-5** — `docs/test-manuel-v1.md` (procédure de bout en bout des 4 gestes).
+- [x] **J5-6** — Revue MVP : README, version 1.0.0 (manifest+package) + `versions.json`, tag `v1.0.0-mvp`. 98 tests verts, domaine 100 % lignes/fonctions, build vert.
+
 ---
 
 ## Journal
@@ -116,6 +118,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - **2026-08-08** — **J2 terminé.** Adaptateur `src/obsidian/vaultFs.ts` (node:fs, sans mock Obsidian) : lire/écrire/lister/detecter + `ecrireAtomique` (temp+rename). Corps & ordre canonique préservés au caractère près, round-trip fichier octet-pour-octet, atomicité vérifiée. Correction d'un cast TS (build `tsc` échouait alors que vitest passait — vitest ne typecheck pas). 64 tests verts, build vert.
 - **2026-08-08** — **J3 terminé.** Squelette plugin : `CockpitView` (ItemView) + ruban + commande, câblés à `VaultDrobdi` (runtime Obsidian → vaultFs). Fonction pure `construireCockpit` (filtrage sprint/backlog/colonnes) testée. Fixtures bac-à-sable + doc test manuel v0. esbuild `platform:"node"` pour les builtins `node:`. 68 tests verts, build vert. Vérif E2E réelle dans Obsidian = J7.
 - **2026-08-08** — **J4 terminé.** Cockpit lecture seule : métriques pures (taux/burndown) + rendu DOM (bandeau jauge+SVG, kanban 5 colonnes, cartes équilibrées, backlog repliable) testé sous jsdom (Obsidian-agnostique). `CockpitView` branchée + rafraîchissement réactif debouncé + ouverture au clic. CSS thème Obsidian. 90 tests verts, build vert. Reste J5 = les 4 gestes (MVP).
+- **2026-08-08** — **🎉 J5 terminé — MVP ATTEINT.** Les 4 gestes câblés : Avancer (drag colonnes), Trier backlog↔sprint (drag croisé), Capturer (commande+modale→nouveau fichier), Planifier (menu jour). Transitions pures + écritures atomiques/minimales, corps et ordre canonique préservés. Tests : jsdom (logique des gestes) + fonctionnels (fichiers). README + version 1.0.0 + `versions.json` + tag `v1.0.0-mvp`. **98 tests verts, domaine 100 % lignes/fonctions, build vert.** J6 (polish) et J7 (E2E) restent planifiés, post-MVP.
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "drobdi-cockpit",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Cockpit de sprint pour le systeme scrum personnel drobdi (plugin Obsidian).",
   "main": "main.js",
   "type": "module",
