@@ -24,6 +24,14 @@ import type { Tache } from "../domain/tache";
 
 const RE_FICHIER_TD = /^TD-\d{4,}\.md$/;
 
+/**
+ * Tâche telle que manipulée par le runtime/UI : le frontmatter (`Tache`) enrichi
+ * de son identifiant (`TD-XXXX`) et de son chemin fichier. Les deux champs
+ * supplémentaires sont ignorés par `serializeFrontmatter`/`validerSchema` (qui ne
+ * regardent que les champs canoniques), donc réécrire une `TacheVault` reste sûr.
+ */
+export type TacheVault = Tache & { id: string; chemin: string };
+
 /** Lit et parse un fichier tâche `.md`. */
 export async function lireTache(chemin: string): Promise<Tache> {
   const raw = await readFile(chemin, "utf8");
@@ -56,12 +64,14 @@ export async function ecrireTache(chemin: string, tache: Tache): Promise<void> {
 }
 
 /** Liste les tâches d'un dossier : uniquement les fichiers `TD-XXXX.md`. */
-export async function listerTaches(dossierTaches: string): Promise<Tache[]> {
+export async function listerTaches(dossierTaches: string): Promise<TacheVault[]> {
   const entrees = await readdir(dossierTaches);
   const fichiers = entrees.filter((f) => RE_FICHIER_TD.test(f)).sort();
-  const taches: Tache[] = [];
+  const taches: TacheVault[] = [];
   for (const f of fichiers) {
-    taches.push(await lireTache(join(dossierTaches, f)));
+    const chemin = join(dossierTaches, f);
+    const tache = await lireTache(chemin);
+    taches.push({ ...tache, id: f.replace(/\.md$/, ""), chemin });
   }
   return taches;
 }

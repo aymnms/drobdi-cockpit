@@ -1,9 +1,10 @@
 import { join } from "node:path";
 import { type App, FileSystemAdapter } from "obsidian";
 import { type CockpitData, construireCockpit } from "../domain/cockpit";
-import { sprintCourant } from "../domain/semaineISO";
+import { type PointBurndown, pointsBurndown, tauxRealisation } from "../domain/metriques";
+import { bornesSemaineISO, sprintCourant } from "../domain/semaineISO";
 import type { FichierSprint } from "../domain/sprint";
-import { detecterSprintCourant, listerTaches } from "./vaultFs";
+import { type TacheVault, detecterSprintCourant, listerTaches } from "./vaultFs";
 
 /** Emplacements (relatifs à la racine du vault) des dossiers du système drobdi. */
 export interface DossiersDrobdi {
@@ -15,7 +16,11 @@ const DOSSIERS_PAR_DEFAUT: DossiersDrobdi = { taches: "taches", sprints: "sprint
 
 /** Données chargées pour un rendu du cockpit. */
 export interface EtatCockpit {
-  cockpit: CockpitData;
+  cockpit: CockpitData<TacheVault>;
+  /** Taux de réalisation du sprint dans `[0, 1]`. */
+  taux: number;
+  /** Points de la courbe de burndown (7 jours de la semaine ISO courante). */
+  burndown: PointBurndown[];
   /** Fiche sprint courante si elle existe sur le disque, sinon `null`. */
   ficheSprint: FichierSprint | null;
 }
@@ -30,6 +35,11 @@ export class VaultDrobdi {
     private readonly app: App,
     private readonly dossiers: DossiersDrobdi = DOSSIERS_PAR_DEFAUT,
   ) {}
+
+  /** Chemin absolu de la racine du vault (pour convertir un chemin fichier en chemin vault-relatif). */
+  racine(): string {
+    return this.cheminBase();
+  }
 
   private cheminBase(): string {
     const adapter = this.app.vault.adapter;
@@ -50,6 +60,8 @@ export class VaultDrobdi {
       maintenant,
     );
     const cockpit = construireCockpit(taches, sprintCourant(maintenant));
-    return { cockpit, ficheSprint };
+    const taux = tauxRealisation(cockpit.tachesSprint);
+    const burndown = pointsBurndown(cockpit.tachesSprint, bornesSemaineISO(maintenant));
+    return { cockpit, taux, burndown, ficheSprint };
   }
 }

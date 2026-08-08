@@ -1,1 +1,282 @@
-/* Styles du cockpit — ajoutes au fil des jalons v0.5+ */
+/* Cockpit drobdi — styles (J4 v0.5+). Utilise les variables de thème Obsidian
+   pour rester cohérent en clair/sombre. */
+
+.drobdi-cockpit {
+  display: flex;
+  gap: var(--size-4-4);
+  height: 100%;
+  padding: var(--size-4-4);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.drobdi-principal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-4);
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ---------- Bandeau métriques ---------- */
+
+.drobdi-bandeau {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto auto;
+  gap: var(--size-4-2) var(--size-4-4);
+  align-items: center;
+  padding: var(--size-4-3);
+  background: var(--background-secondary);
+  border-radius: var(--radius-m);
+}
+
+.drobdi-bandeau-entete {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  gap: var(--size-4-2);
+}
+
+.drobdi-sprint-id {
+  font-weight: var(--font-bold);
+  font-size: var(--font-ui-large);
+}
+
+.drobdi-sprint-statut {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.drobdi-jauge {
+  position: relative;
+  height: 1.6rem;
+  background: var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  overflow: hidden;
+}
+
+.drobdi-jauge-fill {
+  height: 100%;
+  background: var(--interactive-accent);
+  transition: width 0.3s ease;
+}
+
+.drobdi-jauge-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-bold);
+  color: var(--text-on-accent);
+  mix-blend-mode: difference;
+}
+
+.drobdi-burndown {
+  width: 100%;
+  height: 3rem;
+}
+
+.drobdi-burndown-ligne {
+  fill: none;
+  stroke: var(--interactive-accent);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.drobdi-burndown-point {
+  fill: var(--interactive-accent);
+}
+
+/* ---------- Kanban ---------- */
+
+.drobdi-kanban {
+  display: flex;
+  gap: var(--size-4-3);
+  flex: 1 1 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-items: flex-start;
+}
+
+.drobdi-colonne {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 12rem;
+  max-width: 20rem;
+  max-height: 100%;
+  background: var(--background-secondary);
+  border-radius: var(--radius-m);
+  padding: var(--size-4-2);
+}
+
+.drobdi-colonne-titre {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: var(--font-bold);
+  font-size: var(--font-ui-small);
+  padding: var(--size-4-1) var(--size-4-2);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.drobdi-colonne-compte {
+  background: var(--background-modifier-border);
+  color: var(--text-normal);
+  border-radius: var(--radius-s);
+  padding: 0 var(--size-4-2);
+  font-size: var(--font-ui-smaller);
+}
+
+.drobdi-colonne-cartes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  overflow-y: auto;
+  padding: var(--size-4-1);
+  min-height: 2rem;
+}
+
+/* ---------- Cartes ---------- */
+
+.drobdi-carte {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  padding: var(--size-4-2);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-1);
+  box-shadow: var(--shadow-s);
+}
+
+.drobdi-carte:hover {
+  border-color: var(--interactive-accent);
+}
+
+.drobdi-carte.is-drag {
+  opacity: 0.5;
+}
+
+.drobdi-carte-titre {
+  font-size: var(--font-ui-small);
+  line-height: 1.3;
+}
+
+.drobdi-carte-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  flex-wrap: wrap;
+}
+
+.drobdi-badge-projet {
+  color: #fff;
+  border-radius: var(--radius-s);
+  padding: 0 var(--size-4-1);
+  font-size: var(--font-ui-smaller);
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drobdi-pastille {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  background: var(--text-muted);
+}
+
+.drobdi-pastille-vital {
+  background: var(--color-red);
+}
+.drobdi-pastille-a-traiter {
+  background: var(--color-orange);
+}
+.drobdi-pastille-detente {
+  background: var(--color-blue);
+}
+.drobdi-pastille-optionnelle {
+  background: var(--text-faint);
+}
+
+.drobdi-badge-jour {
+  margin-left: auto;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  cursor: pointer;
+  border: 1px dashed transparent;
+  border-radius: var(--radius-s);
+  padding: 0 var(--size-4-1);
+}
+
+.drobdi-badge-jour:hover {
+  border-color: var(--background-modifier-border);
+}
+
+/* Cible de dépôt active (drag & drop, J5) */
+.drobdi-colonne.is-cible .drobdi-colonne-cartes,
+.drobdi-backlog.is-cible .drobdi-backlog-cartes {
+  outline: 2px dashed var(--interactive-accent);
+  outline-offset: -2px;
+  border-radius: var(--radius-s);
+}
+
+/* ---------- Panneau backlog ---------- */
+
+.drobdi-backlog {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 15rem;
+  background: var(--background-secondary);
+  border-radius: var(--radius-m);
+  padding: var(--size-4-2);
+  max-height: 100%;
+  transition: flex-basis 0.2s ease;
+}
+
+.drobdi-backlog-titre {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: var(--font-bold);
+  font-size: var(--font-ui-small);
+  cursor: pointer;
+  padding: var(--size-4-1) var(--size-4-2);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.drobdi-backlog-chevron {
+  transition: transform 0.2s ease;
+}
+
+.drobdi-backlog-cartes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  overflow-y: auto;
+  padding: var(--size-4-1);
+}
+
+.drobdi-backlog.is-replie {
+  flex-basis: 3rem;
+}
+
+.drobdi-backlog.is-replie .drobdi-backlog-libelle,
+.drobdi-backlog.is-replie .drobdi-backlog-cartes {
+  display: none;
+}
+
+.drobdi-backlog.is-replie .drobdi-backlog-chevron {
+  transform: rotate(-90deg);
+}

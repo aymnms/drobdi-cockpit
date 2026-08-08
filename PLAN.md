@@ -31,14 +31,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-### J4 — v0.5 : cockpit lecture seule
-
-- [ ] **J4-1** — `tauxRealisation` (pur, TDD)
-- [ ] **J4-2** — `pointsBurndown` (pur, TDD) + `bornesSemaineISO`
-- [ ] **J4-3** — Rendu bandeau métriques (jauge % + burndown SVG)
-- [ ] **J4-4** — Rendu kanban (colonnes statuts, cartes équilibrées)
-- [ ] **J4-5** — Rendu panneau backlog repliable
-- [ ] **J4-6** — Rafraîchissement réactif (`vault.on('modify')`)
+*(rien — J4 terminé, J5 (MVP) à démarrer)*
 
 ---
 
@@ -106,6 +99,15 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - [x] **J3-4** — `docs/test-manuel-v0.md` + fixtures `fixtures/vault-bac-a-sable/` (taches/sprints/projets, sprint 2026-W32).
 - Correctif build : esbuild `platform: "node"` pour externaliser les imports `node:` (fs/promises, path). 68 tests verts, build vert.
 
+### J4 — v0.5 : cockpit lecture seule
+
+- [x] **J4-1 / J4-2** — `tauxRealisation`, `pointsBurndown`, `bornesSemaineISO` (purs, TDD, 15 tests).
+- [x] **J4-3** — `rendreBandeau` : jauge % + burndown SVG (7 points). Testé jsdom.
+- [x] **J4-4** — `rendreKanban` : 5 colonnes statuts + cartes équilibrées (titre, badge projet coloré, pastille priorité, badge jour). Testé jsdom.
+- [x] **J4-5** — `rendreBacklog` : panneau repliable trié par priorité. Testé jsdom.
+- [x] **J4-6** — `CockpitView` rendue via `rendreCockpit`, rafraîchissement réactif (`vault.on('modify'/create/delete/rename')` filtré sur taches/sprints, debounce 200 ms). Ouverture de note au clic.
+- Archi : rendu DOM standard (`src/ui/`) testable jsdom + fonctionnant dans Obsidian ; `TacheVault = Tache & {id, chemin}` ; `construireCockpit` rendu générique ; helpers de format purs ; `styles.css` (variables de thème Obsidian). +`jsdom`, +`DOM.Iterable`. 90 tests verts.
+
 ---
 
 ## Journal
@@ -115,6 +117,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - **2026-08-08** — **J1 terminé.** Noyau domaine complet en TDD strict (rouge→vert→commit à chaque groupe) : semaine ISO, type `Tache` + parse/serialize (ordre canonique, round-trip), validation R1/R2/R4, numérotation TD, 5 transitions pures, création. `@vitest/coverage-v8` ajouté. 50 tests verts, 100 % lignes/fonctions sur `src/domain/`. Prêt pour J2 (adaptateur Obsidian, tests fonctionnels sur vrai FS).
 - **2026-08-08** — **J2 terminé.** Adaptateur `src/obsidian/vaultFs.ts` (node:fs, sans mock Obsidian) : lire/écrire/lister/detecter + `ecrireAtomique` (temp+rename). Corps & ordre canonique préservés au caractère près, round-trip fichier octet-pour-octet, atomicité vérifiée. Correction d'un cast TS (build `tsc` échouait alors que vitest passait — vitest ne typecheck pas). 64 tests verts, build vert.
 - **2026-08-08** — **J3 terminé.** Squelette plugin : `CockpitView` (ItemView) + ruban + commande, câblés à `VaultDrobdi` (runtime Obsidian → vaultFs). Fonction pure `construireCockpit` (filtrage sprint/backlog/colonnes) testée. Fixtures bac-à-sable + doc test manuel v0. esbuild `platform:"node"` pour les builtins `node:`. 68 tests verts, build vert. Vérif E2E réelle dans Obsidian = J7.
+- **2026-08-08** — **J4 terminé.** Cockpit lecture seule : métriques pures (taux/burndown) + rendu DOM (bandeau jauge+SVG, kanban 5 colonnes, cartes équilibrées, backlog repliable) testé sous jsdom (Obsidian-agnostique). `CockpitView` branchée + rafraîchissement réactif debouncé + ouverture au clic. CSS thème Obsidian. 90 tests verts, build vert. Reste J5 = les 4 gestes (MVP).
 
 ---
 
