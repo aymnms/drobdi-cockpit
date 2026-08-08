@@ -1,10 +1,17 @@
 import { join } from "node:path";
 import { type App, FileSystemAdapter } from "obsidian";
 import { type CockpitData, construireCockpit } from "../domain/cockpit";
+import { creerTache } from "../domain/creation";
 import { type PointBurndown, pointsBurndown, tauxRealisation } from "../domain/metriques";
 import { bornesSemaineISO, sprintCourant } from "../domain/semaineISO";
 import type { FichierSprint } from "../domain/sprint";
-import { type TacheVault, detecterSprintCourant, listerTaches } from "./vaultFs";
+import type { Tache } from "../domain/tache";
+import {
+  type TacheVault,
+  detecterSprintCourant,
+  ecrireTache,
+  listerTaches,
+} from "./vaultFs";
 
 /** Emplacements (relatifs à la racine du vault) des dossiers du système drobdi. */
 export interface DossiersDrobdi {
@@ -63,5 +70,25 @@ export class VaultDrobdi {
     const taux = tauxRealisation(cockpit.tachesSprint);
     const burndown = pointsBurndown(cockpit.tachesSprint, bornesSemaineISO(maintenant));
     return { cockpit, taux, burndown, ficheSprint };
+  }
+
+  /**
+   * Réécrit une tâche existante sur son fichier (écriture atomique et minimale
+   * via l'adaptateur). `modifiee` provient d'une transition pure du domaine.
+   */
+  async enregistrer(chemin: string, modifiee: Tache): Promise<void> {
+    await ecrireTache(chemin, modifiee);
+  }
+
+  /**
+   * Geste « Capturer » : crée un nouveau fichier `taches/TD-XXXX.md` en Backlog.
+   * Renvoie l'identifiant attribué.
+   */
+  async capturer(titre: string, projet: string): Promise<string> {
+    const dossier = join(this.cheminBase(), this.dossiers.taches);
+    const existants = (await listerTaches(dossier)).map((t) => t.id);
+    const { id, tache } = creerTache(titre, projet, existants);
+    await ecrireTache(join(dossier, `${id}.md`), tache);
+    return id;
   }
 }

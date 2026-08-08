@@ -31,20 +31,18 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-*(rien — J4 terminé, J5 (MVP) à démarrer)*
+### J5 — v1 : les 4 gestes (MVP)
+
+- [ ] **J5-1** — Geste « Avancer » (drag entre colonnes) → `avancerStatut` → `ecrireTache`
+- [ ] **J5-2** — Geste « Trier backlog ↔ sprint » (drag) → `trierVersSprint`/`trierVersBacklog`
+- [ ] **J5-3** — Geste « Capturer » (commande + modal) → `creerTache` → nouveau fichier
+- [ ] **J5-4** — Geste « Planifier » (clic badge jour → menu lun-dim) → `planifierCreneau`
+- [ ] **J5-5** — Test manuel de bout en bout des 4 gestes
+- [ ] **J5-6** — Jalon MVP : revue, README, tag `v1.0.0-mvp`
 
 ---
 
 ## ⬜ À faire
-
-### J5 — v1 : les 4 gestes (MVP)
-
-- [ ] **J5-1** — Geste "Avancer une tâche" : drag & drop entre colonnes kanban → appelle J1-8 → J2-2.
-- [ ] **J5-2** — Geste "Trier backlog ↔ sprint" : drag panneau backlog ↔ colonne (et inverse) → J1-9/J1-10 → J2-2, transition atomique vérifiée.
-- [ ] **J5-3** — Geste "Capturer une idée" : raccourci clavier global → modal titre (+ projet optionnel) → Entrée → J1-12 → écriture nouveau fichier.
-- [ ] **J5-4** — Geste "Planifier dans la semaine" : clic badge jour → sélecteur lun-dim (+ heure optionnelle) → J1-11 → J2-2.
-- [ ] **J5-5** — Test manuel documenté de bout en bout des 4 gestes sur vault bac à sable.
-- [ ] **J5-6** — **Jalon MVP** : revue globale, mise à jour README du repo, tag git `v1.0.0-mvp`.
 
 ### J6 — v1.1 : polish (post-MVP)
 

@@ -95,6 +95,77 @@ describe("rendreBacklog", () => {
   });
 });
 
+describe("gestes drag & drop", () => {
+  const drag = (source: Element, cible: Element) => {
+    source.dispatchEvent(new Event("dragstart", { bubbles: true }));
+    cible.dispatchEvent(new Event("drop", { bubbles: true }));
+  };
+
+  it("J5-1 : glisser une carte vers une autre colonne appelle onAvancer(t, statutCible)", () => {
+    const cockpit = construireCockpit(TACHES, "2026-W32");
+    const onAvancer = vi.fn();
+    const ctx = { source: null };
+    rendreKanban(root, cockpit, { onAvancer }, ctx);
+
+    drag(
+      root.querySelector('[data-td="TD-0002"]') as Element, // À faire
+      root.querySelector('[data-statut="En cours"]') as Element,
+    );
+    expect(onAvancer).toHaveBeenCalledOnce();
+    expect(onAvancer.mock.calls[0][0].id).toBe("TD-0002");
+    expect(onAvancer.mock.calls[0][1]).toBe("En cours");
+  });
+
+  it("J5-1 : déposer dans la même colonne ne déclenche rien", () => {
+    const cockpit = construireCockpit(TACHES, "2026-W32");
+    const onAvancer = vi.fn();
+    const ctx = { source: null };
+    rendreKanban(root, cockpit, { onAvancer }, ctx);
+    drag(
+      root.querySelector('[data-td="TD-0002"]') as Element,
+      root.querySelector('[data-statut="À faire"]') as Element,
+    );
+    expect(onAvancer).not.toHaveBeenCalled();
+  });
+
+  it("J5-2 : backlog → kanban appelle onEntrerSprint ; kanban → backlog appelle onSortirSprint", () => {
+    const cockpit = construireCockpit(TACHES, "2026-W32");
+    const onEntrerSprint = vi.fn();
+    const onSortirSprint = vi.fn();
+    const ctx = { source: null };
+    rendreKanban(root, cockpit, { onEntrerSprint, onSortirSprint }, ctx);
+    rendreBacklog(root, cockpit.backlog, { onEntrerSprint, onSortirSprint }, ctx);
+
+    drag(
+      root.querySelector('.drobdi-backlog [data-td="TD-0009"]') as Element,
+      root.querySelector('[data-statut="À faire"]') as Element,
+    );
+    expect(onEntrerSprint).toHaveBeenCalledOnce();
+    expect(onEntrerSprint.mock.calls[0][0].id).toBe("TD-0009");
+
+    drag(
+      root.querySelector('.drobdi-kanban [data-td="TD-0001"]') as Element,
+      root.querySelector(".drobdi-backlog") as Element,
+    );
+    expect(onSortirSprint).toHaveBeenCalledOnce();
+    expect(onSortirSprint.mock.calls[0][0].id).toBe("TD-0001");
+  });
+});
+
+describe("geste planifier (J5-4)", () => {
+  it("clic sur le badge jour appelle onPlanifier sans ouvrir la note", () => {
+    const cockpit = construireCockpit(TACHES, "2026-W32");
+    const onPlanifier = vi.fn();
+    const onOuvrir = vi.fn();
+    rendreKanban(root, cockpit, { onPlanifier, onOuvrir });
+    const badge = root.querySelector('[data-td="TD-0002"] .drobdi-badge-jour') as HTMLElement;
+    badge.click();
+    expect(onPlanifier).toHaveBeenCalledOnce();
+    expect(onPlanifier.mock.calls[0][0].id).toBe("TD-0002");
+    expect(onOuvrir).not.toHaveBeenCalled();
+  });
+});
+
 describe("rendreCockpit", () => {
   it("compose bandeau + kanban + backlog dans le conteneur", () => {
     const cockpit = construireCockpit(TACHES, "2026-W32");
