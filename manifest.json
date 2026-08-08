@@ -1,0 +1,9 @@
+{
+  "id": "drobdi-cockpit",
+  "name": "Drobdi Cockpit",
+  "version": "0.0.1",
+  "minAppVersion": "1.5.0",
+  "description": "Cockpit de sprint pour le systeme scrum personnel drobdi.",
+  "author": "Aymerick",
+  "isDesktopOnly": false
+}

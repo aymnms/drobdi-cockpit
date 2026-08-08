@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output (généré, non versionné en dev)
+main.js
+main.js.map
+
+# Tests / coverage
+coverage/
+
+# Obsidian
+.obsidian-cache/
+
+# OS
+.DS_Store
+
+# Prompt d'orchestration (local, non versionné)
+CLAUDE_CODE_PROMPT.md

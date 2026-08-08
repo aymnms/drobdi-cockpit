@@ -1,0 +1,30 @@
+{
+  "name": "drobdi-cockpit",
+  "version": "0.0.1",
+  "description": "Cockpit de sprint pour le systeme scrum personnel drobdi (plugin Obsidian).",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run test/unit",
+    "test:functional": "vitest run test/functional"
+  },
+  "keywords": [],
+  "author": "Aymerick",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.21.0",
+    "obsidian": "latest",
+    "tslib": "^2.6.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true
+  }
+}
