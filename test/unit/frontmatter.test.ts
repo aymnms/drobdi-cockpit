@@ -99,6 +99,35 @@ Estimation: 3
     const t = parseFrontmatter(FICHIER_MINIMAL.replace(/\n/g, "\r\n"));
     expect(t.titre).toBe("Idée en vrac");
   });
+
+  it("ignore les lignes de frontmatter sans deux-points", () => {
+    const avecLigneOrpheline = `---
+Titre: X
+Projet: "[[P]]"
+ligne sans deux points
+Statut: Backlog
+Priorité: À traiter
+Sprint:
+---
+
+# X
+`;
+    const t = parseFrontmatter(avecLigneOrpheline);
+    expect(t.titre).toBe("X");
+  });
+
+  it("lève une erreur si le champ Titre est absent", () => {
+    const sansTitre = `---
+Projet: "[[P]]"
+Statut: Backlog
+Priorité: À traiter
+Sprint:
+---
+
+# X
+`;
+    expect(() => parseFrontmatter(sansTitre)).toThrow(/Titre/);
+  });
 });
 
 describe("serializeFrontmatter", () => {

@@ -27,4 +27,9 @@ describe("prochainNumeroTD", () => {
   it("accepte aussi des numéros bruts sans préfixe", () => {
     expect(prochainNumeroTD(["0003"])).toBe("TD-0004");
   });
+
+  it("ignore les entrées sans chiffres (compte pour 0)", () => {
+    expect(prochainNumeroTD(["brouillon", "TD-0002"])).toBe("TD-0003");
+    expect(prochainNumeroTD(["sans-numero"])).toBe("TD-0001");
+  });
 });

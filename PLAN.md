@@ -31,21 +31,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-### J1 — Domaine (fonctions pures) — TDD strict
-
-- [ ] **J1-1** — `semaineISO(date)` → `YYYY-Wxx` (ISO 8601, cas limites année/53 semaines)
-- [ ] **J1-2** — `sprintCourant(maintenant)` → wrapper métier
-- [ ] **J1-3** — Type `Tache` (schéma v2)
-- [ ] **J1-4** — `parseFrontmatter(raw)`
-- [ ] **J1-5** — `serializeFrontmatter(tache)` (round-trip)
-- [ ] **J1-6** — `validerSchema(tache)` (R1/R2/R4)
-- [ ] **J1-7** — `prochainNumeroTD(existants)`
-- [ ] **J1-8** — `avancerStatut(tache, statut, aujourdHui)`
-- [ ] **J1-9** — `trierVersSprint(tache, sprint)`
-- [ ] **J1-10** — `trierVersBacklog(tache)`
-- [ ] **J1-11** — `planifierCreneau(tache, debut, fin?)`
-- [ ] **J1-12** — `creerTache(titre, projet, existants)`
-- [ ] **J1-13** — Revue couverture `src/domain/` (viser 100%)
+*(rien — J1 terminé, J2 à démarrer)*
 
 ---
 
@@ -113,12 +99,22 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - [x] **J0-3** — `npm test` s'exécute proprement (0 test, `passWithNoTests` ajouté à `vitest.config.ts`).
 - [x] **J0-4** — Premier commit + push sur `main`, avec `PLAN.md` et `.gitignore`.
 
+### J1 — Domaine (fonctions pures, `src/domain/`, TDD strict)
+
+- [x] **J1-1 / J1-2** — `semaineISO` + `sprintCourant` (ISO 8601, cas limites année/53 semaines). 7 tests.
+- [x] **J1-3 / J1-4 / J1-5** — Type `Tache` (schéma v2) + `parseFrontmatter`/`serializeFrontmatter`. Parseur maison → ordre canonique préservé, corps verbatim, round-trip vérifié, champs hors schéma collectés. 13 tests.
+- [x] **J1-6** — `validerSchema` (R1/R2/R4 + domaines Statut/Priorité + invariant Sprint⟺Backlog + champs requis). 11 tests.
+- [x] **J1-7** — `prochainNumeroTD` (max+1, padding 4, jamais réutilisé). 8 tests.
+- [x] **J1-8..J1-12** — `avancerStatut`, `trierVersSprint`, `trierVersBacklog`, `planifierCreneau`, `creerTache`. Transitions pures immuables, écriture minimale. 13 tests.
+- [x] **J1-13** — Couverture `src/domain/` : **100 % statements/functions/lines** (branches 93,6 %, reste = garde-fous défensifs `?? ""` inatteignables). 50 tests au total.
+
 ---
 
 ## Journal
 
 - **AAAA-MM-JJ** — Création du plan initial (ce fichier), 7 jalons, ~45 tâches. Setup repo local fait hors Claude Code (squelette package.json/tsconfig/esbuild/vitest déjà présent), reste à valider dans l'environnement réel.
 - **2026-08-08** — **J0 terminé.** Node.js absent de la machine → installé via Homebrew (node 26.7.0, npm 11.19.0) ; postinstall esbuild approuvé (npm 11). Arborescence `src/{domain,obsidian}` + `test/{unit,functional}` créée, `main.ts` → `src/main.ts`. `.gitignore` créé (le prompt le supposait présent). Build vert, tests verts (0 test). Prêt pour J1.
+- **2026-08-08** — **J1 terminé.** Noyau domaine complet en TDD strict (rouge→vert→commit à chaque groupe) : semaine ISO, type `Tache` + parse/serialize (ordre canonique, round-trip), validation R1/R2/R4, numérotation TD, 5 transitions pures, création. `@vitest/coverage-v8` ajouté. 50 tests verts, 100 % lignes/fonctions sur `src/domain/`. Prêt pour J2 (adaptateur Obsidian, tests fonctionnels sur vrai FS).
 
 ---
 
