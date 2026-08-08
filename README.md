@@ -69,7 +69,11 @@ données v2 est la référence ; toute écriture est atomique, minimale, et pré
 l'ordre canonique des champs ainsi que le corps des notes.
 
 Le suivi d'avancement détaillé (jalons, journal) est dans [`PLAN.md`](./PLAN.md).
-Procédures de test manuel : [`docs/`](./docs).
+
+Documentation :
+- [Guide utilisateur](./docs/guide-utilisateur.md)
+- [Installation dans le vault réel](./docs/installation-vault-reel.md) · script `scripts/install.sh`
+- Tests manuels : [v0](./docs/test-manuel-v0.md) · [v1 / 4 gestes](./docs/test-manuel-v1.md)
 
 ## Crédits
 

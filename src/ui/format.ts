@@ -9,15 +9,17 @@ const JOURS_COURTS = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
 
 /**
  * Couleur déterministe dérivée du nom de projet (teinte HSL stable). Sert au
- * badge projet coloré. Deux noms distincts donnent (presque toujours) deux
- * teintes distinctes ; le même nom donne toujours la même couleur.
+ * badge projet coloré et à l'accent des cartes. La teinte est répartie via
+ * l'angle d'or (~137,5°) pour maximiser l'écart visuel entre projets proches ;
+ * saturation/luminosité fixes garantissent un contraste correct du texte blanc.
+ * Même nom → même couleur ; deux noms distincts → (quasi toujours) deux teintes.
  */
 export function couleurProjet(nom: string): string {
   let hash = 0;
   for (let i = 0; i < nom.length; i++) {
-    hash = (hash * 31 + nom.charCodeAt(i)) % 360;
+    hash = (hash * 31 + nom.charCodeAt(i)) | 0; // int 32 bits signé
   }
-  const teinte = ((hash % 360) + 360) % 360;
+  const teinte = Math.round((Math.abs(hash) * 137.508) % 360);
   return `hsl(${teinte} 55% 45%)`;
 }
 

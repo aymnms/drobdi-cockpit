@@ -68,6 +68,16 @@ describe("rendreKanban", () => {
     expect(carte?.querySelector(".drobdi-badge-jour")?.textContent).toContain("mar. 4");
   });
 
+  it("applique un accent couleur projet et un libellé de priorité accessible (J6-1/J6-2)", () => {
+    const cockpit = construireCockpit(TACHES, "2026-W32");
+    rendreKanban(root, cockpit);
+    const carte = root.querySelector('.drobdi-carte[data-td="TD-0001"]') as HTMLElement;
+    expect(carte.classList.contains("has-accent")).toBe(true);
+    expect(carte.style.getPropertyValue("--drobdi-accent")).toMatch(/^hsl\(/);
+    const pastille = carte.querySelector(".drobdi-pastille") as HTMLElement;
+    expect(pastille.getAttribute("aria-label")).toContain("Priorité");
+  });
+
   it("appelle onOuvrir au clic sur une carte", () => {
     const cockpit = construireCockpit(TACHES, "2026-W32");
     const onOuvrir = vi.fn();

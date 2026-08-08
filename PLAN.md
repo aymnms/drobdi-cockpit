@@ -31,18 +31,11 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 
 ## 🔵 En cours
 
-*(rien — 🎉 MVP atteint, fin de J5. J6/J7 post-MVP en attente de feu vert.)*
+*(rien — J6 terminé, J7 (E2E) à démarrer)*
 
 ---
 
 ## ⬜ À faire
-
-### J6 — v1.1 : polish (post-MVP)
-
-- [ ] **J6-1** — Couleurs par projet (palette dérivée du nom de projet, déterministe).
-- [ ] **J6-2** — Pastilles priorité (couleur/icône par niveau).
-- [ ] **J6-3** — Procédure d'installation dans le vrai vault `drobdi` (dossier `.obsidian/plugins/drobdi-cockpit/`).
-- [ ] **J6-4** — Documentation utilisateur courte (README du plugin).
 
 ### J7 — E2E (post-MVP)
 
@@ -108,6 +101,13 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - [x] **J5-5** — `docs/test-manuel-v1.md` (procédure de bout en bout des 4 gestes).
 - [x] **J5-6** — Revue MVP : README, version 1.0.0 (manifest+package) + `versions.json`, tag `v1.0.0-mvp`. 98 tests verts, domaine 100 % lignes/fonctions, build vert.
 
+### J6 — v1.1 : polish (post-MVP)
+
+- [x] **J6-1** — `couleurProjet` répartie par angle d'or (déterministe) + accent couleur sur les cartes (variable CSS `--drobdi-accent`). Testé.
+- [x] **J6-2** — Pastilles priorité : couleur par niveau (CSS) + `title`/`aria-label` accessibles. Testé.
+- [x] **J6-3** — `scripts/install.sh` (copie sûre des artefacts, refuse un non-vault) + `docs/installation-vault-reel.md` (précautions prod, jamais toucher aux données).
+- [x] **J6-4** — `docs/guide-utilisateur.md` (lecture du cockpit + 4 gestes) ; README enrichi (liens docs). 99 tests verts, build vert.
+
 ---
 
 ## Journal
@@ -119,6 +119,7 @@ Format des ID de tâche : `J<jalon>-<numéro>` (ex. `J0-3` = jalon 0, tâche 3).
 - **2026-08-08** — **J3 terminé.** Squelette plugin : `CockpitView` (ItemView) + ruban + commande, câblés à `VaultDrobdi` (runtime Obsidian → vaultFs). Fonction pure `construireCockpit` (filtrage sprint/backlog/colonnes) testée. Fixtures bac-à-sable + doc test manuel v0. esbuild `platform:"node"` pour les builtins `node:`. 68 tests verts, build vert. Vérif E2E réelle dans Obsidian = J7.
 - **2026-08-08** — **J4 terminé.** Cockpit lecture seule : métriques pures (taux/burndown) + rendu DOM (bandeau jauge+SVG, kanban 5 colonnes, cartes équilibrées, backlog repliable) testé sous jsdom (Obsidian-agnostique). `CockpitView` branchée + rafraîchissement réactif debouncé + ouverture au clic. CSS thème Obsidian. 90 tests verts, build vert. Reste J5 = les 4 gestes (MVP).
 - **2026-08-08** — **🎉 J5 terminé — MVP ATTEINT.** Les 4 gestes câblés : Avancer (drag colonnes), Trier backlog↔sprint (drag croisé), Capturer (commande+modale→nouveau fichier), Planifier (menu jour). Transitions pures + écritures atomiques/minimales, corps et ordre canonique préservés. Tests : jsdom (logique des gestes) + fonctionnels (fichiers). README + version 1.0.0 + `versions.json` + tag `v1.0.0-mvp`. **98 tests verts, domaine 100 % lignes/fonctions, build vert.** J6 (polish) et J7 (E2E) restent planifiés, post-MVP.
+- **2026-08-08** — **J6 terminé (polish).** Couleurs projet déterministes (angle d'or) + accent carte, pastilles priorité accessibles, script + doc d'installation en prod (avec précautions), guide utilisateur. 99 tests verts, build vert. Reste J7 (E2E + CI).
 
 ---
 

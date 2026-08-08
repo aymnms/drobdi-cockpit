@@ -156,6 +156,10 @@
   box-shadow: var(--shadow-s);
 }
 
+.drobdi-carte.has-accent {
+  border-left: 3px solid var(--drobdi-accent, transparent);
+}
+
 .drobdi-carte:hover {
   border-color: var(--interactive-accent);
 }

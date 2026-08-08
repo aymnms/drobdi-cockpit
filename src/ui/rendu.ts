@@ -132,6 +132,12 @@ function creerCarte(
   carte.dataset.td = t.id;
   carte.draggable = true;
 
+  // Accent couleur de la carte = couleur du projet (J6-1), via variable CSS.
+  if (t.projet) {
+    carte.style.setProperty("--drobdi-accent", couleurProjet(t.projet));
+    carte.classList.add("has-accent");
+  }
+
   el(carte, "div", "drobdi-carte-titre", t.titre);
 
   const meta = el(carte, "div", "drobdi-carte-meta");
@@ -140,7 +146,8 @@ function creerCarte(
     badge.style.backgroundColor = couleurProjet(t.projet);
   }
   const pastille = el(meta, "span", `drobdi-pastille drobdi-pastille-${slugPriorite(t.priorite)}`);
-  pastille.title = t.priorite;
+  pastille.title = `Priorité : ${t.priorite}`;
+  pastille.setAttribute("aria-label", `Priorité : ${t.priorite}`);
 
   // Badge jour : toujours présent (affordance de planification, geste J5-4).
   const heure = t.debut ? heureDebut(t.debut) : null;
